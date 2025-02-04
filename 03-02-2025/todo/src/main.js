@@ -48,7 +48,7 @@ todoList.addEventListener("click", (e) => {
     const deleteConfirm = confirm("Are you sure you want to delete this todo?");
     if (deleteConfirm) {
       setTodos((prevTodos) =>
-        prevTodos.filter((todo) => todo.id !== item.dataset.id),
+        prevTodos.filter((todo) => todo.id !== item.dataset.id)
       );
       item.remove();
     }
@@ -72,10 +72,11 @@ todoList.addEventListener("click", (e) => {
     setTodos((prevTodos) => {
       const todo = prevTodos.find((todo) => todo.id === item.dataset.id);
       todo.value = updateInput.value;
+
       return prevTodos;
     });
 
-    renderTodos(todos);
+    renderTodos();
   }
 });
 
