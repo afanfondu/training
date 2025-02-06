@@ -30,7 +30,7 @@ const renderTodos = async () => {
     const html = todos.map((todo) => todoItem(todo)).join("");
     todoList.innerHTML = html;
   } catch (err) {
-    toast.error("Tere net me kuch problem hoga bhai!");
+    toast.error("Something went wrong! Try again later.");
   }
 
   loader.remove();
@@ -50,7 +50,7 @@ todoForm.addEventListener("submit", async (e) => {
     todoList.insertAdjacentHTML("beforeend", todoItem(todo));
     inputTodo.value = "";
   } catch (err) {
-    toast.error("kal kariyo add, aaj mera mann hai tere todo karne ka!");
+    toast.error("Something went wrong while adding todo! Try again later.");
   }
 
   addBtn.removeAttribute("disabled");
@@ -60,7 +60,6 @@ todoForm.addEventListener("submit", async (e) => {
 todoList.addEventListener("click", async (e) => {
   const item = e.target.closest(".list-group-item");
 
-  // on delete button click
   if (e.target.classList.contains("delete")) {
     e.target.setAttribute("disabled", true);
     e.target.innerHTML = "Deleting...";
@@ -71,15 +70,16 @@ todoList.addEventListener("click", async (e) => {
         await api.delete(`/todos/${item.dataset.id}`);
         item.remove();
       } catch (err) {
-        toast.error("Upar wala chahta hai, tu ye delete na kare!");
+        toast.error(
+          "Something went wrong while deleting todo! Try again later.",
+        );
+
+        e.target.removeAttribute("disabled");
+        e.target.innerHTML = "Delete";
       }
     }
-
-    e.target.removeAttribute("disabled");
-    e.target.innerHTML = "Delete";
   }
 
-  // on edit button click
   if (e.target.classList.contains("edit")) {
     const todoTitle = item.querySelector(".text-todo").textContent;
     item.dataset.prevtitle = todoTitle;
@@ -91,7 +91,6 @@ todoList.addEventListener("click", async (e) => {
     `;
   }
 
-  // on update button click
   if (e.target.classList.contains("update")) {
     const updateInput = e.target.previousElementSibling;
     e.target.setAttribute("disabled", true);
@@ -106,7 +105,7 @@ todoList.addEventListener("click", async (e) => {
       todo = res.data;
     } catch (err) {
       todo = { id: item.dataset.id, title: item.dataset.prevtitle };
-      toast.error("Something went wrong! try again later.");
+      toast.error("Something went wrong while updating todo. Try again later.");
     }
 
     item.dataset.id = todo.id;
@@ -120,11 +119,21 @@ todoList.addEventListener("click", async (e) => {
   }
 });
 
-// on reset button click
-deleteAllBtn.addEventListener("click", () => {
+deleteAllBtn.addEventListener("click", async () => {
   const deleteConfirm = confirm("Are you sure you want to delete all todos?");
   if (!deleteConfirm) return;
 
-  todoList.innerHTML = "";
-  toast.error("Ye todos tera picha na chodenge!");
+  deleteAllBtn.setAttribute("disabled", true);
+  deleteAllBtn.innerHTML = "Deleting...";
+  try {
+    await api.delete("/todos/*");
+    todoList.innerHTML = "";
+  } catch (err) {
+    toast.error(
+      "Something went wrong while deleting all todos! Try again later.",
+    );
+  }
+
+  deleteAllBtn.removeAttribute("disabled");
+  deleteAllBtn.innerHTML = "Delete All";
 });
