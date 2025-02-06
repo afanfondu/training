@@ -1,6 +1,8 @@
-# Todo app
-## Demo
+# todo app
+## demo
 
+https://github.com/user-attachments/assets/775605ad-5487-403b-a9b0-88f00279beb5
 
-https://github.com/user-attachments/assets/e7c73a95-159d-473c-9301-9a74b0a20ce3
+## error handling
 
+https://github.com/user-attachments/assets/f10d940d-5765-442b-9c5f-199eed693d9c
