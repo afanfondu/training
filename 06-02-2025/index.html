@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <title>Memory Leak Simulation</title>
+  </head>
+  <body>
+    <h1>Memory Leak Demo</h1>
+    <button id="start">Start Memory Leak</button>
+    <button id="stop">Stop Memory Leak</button>
+    <button id="cleanup">Clean Memory</button>
+
+    <div>
+      <p id="status">Status: Stopped</p>
+      <p id="array-size">0</p>
+      <p id="memory-usage"></p>
+    </div>
+
+    <script src="./assign-3.js"></script>
+  </body>
+</html>
