@@ -1,0 +1,3 @@
+[submodule "07-02-2025/ecommerce-app"]
+	path = 07-02-2025/ecommerce-app
+	url = https://github.com/afanfondu/ecom-app
