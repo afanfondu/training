@@ -10,9 +10,20 @@ class Quiz {
   container = document.querySelector("#app")!;
   score: number = 0;
 
+  // for preventing memory leaks after removing event listeners
+  private boundChoiceHandler: (e: Event) => void;
+  private boundNextHandler: (e: Event) => void;
+  private boundTryAgainHandler: (e: Event) => void;
+
   constructor(questions: Question[]) {
     this.questions = questions;
     this.container.innerHTML = this.generateMarkup();
+
+    this.boundChoiceHandler = this.choiceClickHandler.bind(this);
+    this.boundNextHandler = this.nextClickHandler.bind(this);
+    this.boundTryAgainHandler = this.tryAgainClickHandler.bind(this);
+
+    this.attachEventListeners();
   }
 
   private generateMarkup() {
@@ -60,7 +71,7 @@ class Quiz {
                 <div class="display-4 mb-4">
                   Score: <span id="finalScore">${this.score}</span>/${this.questions.length}
                 </div>
-                <button class="btn btn-outline-light btn-lg px-5">
+                <button class="btn btn-outline-light btn-lg px-5 try-again">
                   Try Again
                 </button>
               </div>
@@ -71,65 +82,70 @@ class Quiz {
     `;
   }
 
-  attachEvents() {
-    this.handleChoiceClick();
-    this.handleNextClick();
+  attachEventListeners() {
+    const quizSection = this.container.querySelector("#quizSection")!;
+
+    quizSection.removeEventListener("click", this.boundChoiceHandler);
+    quizSection.removeEventListener("click", this.boundNextHandler);
+
+    quizSection.addEventListener("click", this.boundChoiceHandler);
+    quizSection.addEventListener("click", this.boundNextHandler);
   }
 
-  disableChoices(quizSection: Element) {
+  disableChoices() {
+    const quizSection = this.container.querySelector("#quizSection")!;
+
     quizSection.querySelectorAll(".choice").forEach((choice) => {
       choice.setAttribute("disabled", "true");
     });
     quizSection.querySelector(".next-btn")?.classList.remove("d-none");
   }
 
-  handleChoiceClick() {
-    const quizSection = this.container.querySelector("#quizSection")!;
+  choiceClickHandler(e: Event) {
+    const choiceButton = e.target as HTMLButtonElement;
+    if (!choiceButton.classList.contains("choice")) return;
 
-    quizSection.addEventListener("click", (e) => {
-      const choiceButton = e.target as HTMLButtonElement;
-      if (!choiceButton.classList.contains("choice")) return;
+    const question = this.questions[this.currentQuestion];
 
-      const question = this.questions[this.currentQuestion];
+    if (question.correctAnswer === choiceButton.textContent) {
+      choiceButton.classList.remove("btn-outline-light");
+      choiceButton.classList.add("btn-success");
+      this.score += 1;
+    } else {
+      choiceButton.classList.remove("btn-outline-light");
+      choiceButton.classList.add("btn-danger");
+    }
 
-      if (question.correctAnswer === choiceButton.textContent) {
-        choiceButton.classList.remove("btn-outline-light");
-        choiceButton.classList.add("btn-success");
-        this.score += 1;
-      } else {
-        choiceButton.classList.remove("btn-outline-light");
-        choiceButton.classList.add("btn-danger");
-      }
-
-      this.disableChoices(quizSection);
-    });
+    this.disableChoices();
   }
 
-  handleNextClick() {
-    const quizSection = this.container.querySelector("#quizSection")!;
-    quizSection.addEventListener("click", (e) => {
-      const nextButton = e.target as HTMLButtonElement;
-      if (!nextButton.classList.contains("next-btn")) return;
+  nextClickHandler(e: Event) {
+    const nextButton = e.target as HTMLButtonElement;
+    if (!nextButton.classList.contains("next-btn")) return;
 
-      if (this.currentQuestion === this.questions.length - 1) {
-        this.container.innerHTML = this.generateResultMarkup();
-        this.handleTryAgainClick();
-        return;
-      }
+    if (this.currentQuestion === this.questions.length - 1) {
+      this.container.innerHTML = this.generateResultMarkup();
+      this.attachTryAgainEvent();
+      return;
+    }
 
-      this.currentQuestion += 1;
-      this.container.innerHTML = this.generateMarkup();
-      this.attachEvents();
-    });
+    this.currentQuestion += 1;
+    this.container.innerHTML = this.generateMarkup();
+    this.attachEventListeners();
   }
 
-  handleTryAgainClick() {
-    this.container.querySelector("button")?.addEventListener("click", () => {
-      this.currentQuestion = 0;
-      this.score = 0;
-      this.container.innerHTML = this.generateMarkup();
-      this.attachEvents();
-    });
+  attachTryAgainEvent() {
+    const tryAgainButton = this.container.querySelector("button.try-again")!;
+
+    tryAgainButton.removeEventListener("click", this.boundTryAgainHandler);
+    tryAgainButton.addEventListener("click", this.boundTryAgainHandler);
+  }
+
+  tryAgainClickHandler() {
+    this.currentQuestion = 0;
+    this.score = 0;
+    this.container.innerHTML = this.generateMarkup();
+    this.attachEventListeners();
   }
 }
 
@@ -168,8 +184,7 @@ const init = () => {
     },
   ];
 
-  const quiz = new Quiz(questions);
-  quiz.attachEvents();
+  new Quiz(questions);
 };
 
 init();
