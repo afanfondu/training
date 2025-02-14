@@ -7,27 +7,42 @@ import toast from "./views/toast";
 
 const init = () => {
   expenseForm.render();
+  expenseFilters.render(null, true);
+  const expenseList = new ExpenseList();
+  expenseList.render(expenseStore.getState().expenses);
+
   expenseForm.submitHandler((formData) => {
     const result = expenseStore.getState().addExpense(formData);
     if (!result.success) return toast.error(result.error.message);
 
-    expenseList.addNewExpense(result.data);
+    if (expenseStore.getState().expenses.length === 1) {
+      expenseList.render(expenseStore.getState().expenses);
+      expenseList.deleteExpenseHandler((id) => {
+        expenseStore.getState().removeExpense(id);
+      });
+    } else expenseList.addNewExpense(result.data);
   });
-
-  expenseFilters.render(null, true);
-
-  const expenseList = new ExpenseList();
-  expenseList.render(expenseStore.getState().expenses);
 
   expenseFilters.filtersChangeHandler((filters) => {
     expenseStore.getState().setFilters(filters);
-    const expenses = expenseStore.getState().getFilteredExpenses();
-    expenseList.render(expenses);
   });
 
-  expenseList.deleteExpenseHandler((id) => {
-    expenseStore.getState().removeExpense(id);
-  });
+  if (expenseStore.getState().expenses.length !== 0) {
+    expenseList.deleteExpenseHandler((id) => {
+      expenseStore.getState().removeExpense(id);
+    });
+  }
+
+  expenseStore.subscribe(
+    (state) => state.filters,
+    () => {
+      const expenses = expenseStore.getState().getFilteredExpenses();
+      expenseList.render(expenses);
+      expenseList.deleteExpenseHandler((id) => {
+        expenseStore.getState().removeExpense(id);
+      });
+    },
+  );
 };
 
 init();

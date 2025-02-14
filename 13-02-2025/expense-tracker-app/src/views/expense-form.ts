@@ -32,10 +32,11 @@ class ExpenseForm extends View<null> {
                 </select>
               </div>
               <div class="col-md-6">
-                <input name="date" type="date" class="form-control bg-dark text-light" />
+                <input required name="date" type="date" class="form-control bg-dark text-light" />
               </div>
               <div class="col-md-6">
                 <input
+                  required
                   name="description"
                   type="text"
                   class="form-control bg-dark text-light"
@@ -62,6 +63,7 @@ class ExpenseForm extends View<null> {
         new FormData(e.target as HTMLFormElement),
       ) as unknown;
       handler(formData);
+      form.reset();
     });
   }
 }

@@ -6,7 +6,7 @@ class ExpenseList extends View<Expense[]> {
 
   generateMarkup(): string {
     const expenses = this.data;
-    if (!expenses) return "";
+    if (!expenses || !expenses.length) return "";
 
     return `
       <div class="table-responsive">

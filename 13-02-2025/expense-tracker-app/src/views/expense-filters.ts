@@ -10,7 +10,7 @@ class ExpenseFilters extends View<null> {
       .join("");
 
     return `
-      <div class="card bg-dark border-light mb-4">
+      <div id="expense-history" class="card bg-dark border-light mb-4">
         <div class="card-body">
           <h3 class="card-title mb-4">ExpenseHistory</h3>
           <div class="row g-3 mb-5">
@@ -45,25 +45,25 @@ class ExpenseFilters extends View<null> {
   }
 
   filtersChangeHandler(handler: (filters: Filters) => void) {
-    this.container.addEventListener("change", () => {
-      const categoryFilter = document.querySelector(
-        "#category",
-      ) as HTMLSelectElement;
-      const startDate = document.querySelector(
-        "#start-date",
-      ) as HTMLInputElement;
-      const endDate = document.querySelector("#end-date") as HTMLInputElement;
+    this.container
+      .querySelector("#expense-history")!
+      .addEventListener("change", () => {
+        const categoryFilter = document.querySelector(
+          "#category",
+        ) as HTMLSelectElement;
+        const startDate = document.querySelector(
+          "#start-date",
+        ) as HTMLInputElement;
+        const endDate = document.querySelector("#end-date") as HTMLInputElement;
 
-      const filters = {
-        category: categoryFilter.value
-          ? (categoryFilter.value as Category)
-          : undefined,
-        startDate: startDate.value ? new Date(startDate.value) : undefined,
-        endDate: endDate.value ? new Date(endDate.value) : undefined,
-      };
+        const filters = {
+          category: categoryFilter.value as Category,
+          startDate: startDate.value,
+          endDate: endDate.value,
+        };
 
-      handler(filters);
-    });
+        handler(filters);
+      });
   }
 }
 

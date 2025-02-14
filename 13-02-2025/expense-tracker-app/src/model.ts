@@ -11,7 +11,7 @@ export enum Category {
 
 const expenseSchema = z.object({
   id: z.string().default(() => Date.now().toString()),
-  amount: z.coerce.number(),
+  amount: z.coerce.number().min(0),
   category: z.nativeEnum(Category),
   date: z.coerce.date(),
   description: z.string(),
@@ -28,8 +28,8 @@ export type Expense = z.infer<typeof expenseSchema>;
 
 export type Filters = {
   category?: Category;
-  startDate?: Date;
-  endDate?: Date;
+  startDate?: string;
+  endDate?: string;
 };
 
 type State = {
@@ -78,11 +78,14 @@ const store = createStore<State>()(
             }
             if (
               filters.startDate &&
-              new Date(expense.date) < filters.startDate
+              new Date(expense.date) < new Date(filters.startDate)
             ) {
               return false;
             }
-            if (filters.endDate && new Date(expense.date) > filters.endDate) {
+            if (
+              filters.endDate &&
+              new Date(expense.date) > new Date(filters.endDate)
+            ) {
               return false;
             }
             return true;
