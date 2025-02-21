@@ -1,22 +1,11 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useReducer
-} from 'react'
-import { taskReducer, TaskState } from './task-reducer'
-import { Task } from '../types'
+import { createContext, useContext, useEffect, useReducer } from 'react'
+import { TaskAction, taskReducer, TaskState } from './task-reducer'
 
 const STORAGE_KEY = 'tasks'
 
 type TTaskContext = {
   tasks: TaskState
-  addTask: (taskValue: string) => void
-  removeTask: (taskId: string) => void
-  toggleTask: (taskId: string) => void
-  updateTask: (updatedTask: Task) => void
-  resetAll: () => void
+  dispatch: React.ActionDispatch<[action: TaskAction]>
 }
 
 const TaskContext = createContext<TTaskContext | null>(null)
@@ -27,26 +16,6 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     return storageValue ? JSON.parse(storageValue) : []
   })
 
-  const addTask = useCallback((taskValue: string) => {
-    dispatch({ type: 'ADD_TASK', payload: { taskValue } })
-  }, [])
-
-  const removeTask = useCallback((taskId: string) => {
-    dispatch({ type: 'REMOVE_TASK', payload: { taskId } })
-  }, [])
-
-  const toggleTask = useCallback((taskId: string) => {
-    dispatch({ type: 'TOGGLE_TASK', payload: { taskId } })
-  }, [])
-
-  const resetAll = useCallback(() => {
-    dispatch({ type: 'RESET_ALL' })
-  }, [])
-
-  const updateTask = useCallback((updatedTask: Task) => {
-    dispatch({ type: 'UPDATE_TASK', payload: updatedTask })
-  }, [])
-
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
   }, [tasks])
@@ -55,11 +24,8 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     <TaskContext
       value={{
         tasks,
-        addTask,
-        removeTask,
-        toggleTask,
-        updateTask,
-        resetAll
+        // addTask, removeTask, toggleTask, updateTask (prev commit) -> cause rerenders even if wrap in useCallback here
+        dispatch
       }}
     >
       {children}

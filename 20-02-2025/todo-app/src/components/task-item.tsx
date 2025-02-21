@@ -1,15 +1,21 @@
-import { useState } from 'react'
+import { memo, useRef, useState } from 'react'
 import { type Task } from '../types'
-import { useTasks } from '../context/task-context'
 
 type Props = {
   task: Task
+  updateTask: (task: Task) => void
+  removeTask: (taskId: string) => void
+  toggleTask: (taskId: string) => void
 }
 
-const TaskItem: React.FC<Props> = ({ task }) => {
-  const [editValue, setEditValue] = useState(task.value)
+const TaskItem: React.FC<Props> = ({
+  task,
+  updateTask,
+  removeTask,
+  toggleTask
+}) => {
+  const editValueInputRef = useRef<HTMLInputElement | null>(null)
   const [isEditing, setIsEditing] = useState(false)
-  const { updateTask, removeTask, toggleTask } = useTasks()
 
   if (isEditing) {
     return (
@@ -17,16 +23,19 @@ const TaskItem: React.FC<Props> = ({ task }) => {
         <form
           onSubmit={e => {
             e.preventDefault()
-            updateTask({ ...task, value: editValue })
-            setIsEditing(false)
+
+            if (editValueInputRef.current) {
+              updateTask({ ...task, value: editValueInputRef.current.value })
+              setIsEditing(false)
+            }
           }}
           className="input-group mb-3"
         >
           <input
+            ref={editValueInputRef}
             type="text"
+            defaultValue={task.value}
             className="form-control"
-            value={editValue}
-            onChange={e => setEditValue(e.target.value)}
             required
           />
 
@@ -48,7 +57,11 @@ const TaskItem: React.FC<Props> = ({ task }) => {
             checked={task.completed}
             onChange={() => toggleTask(task.id)}
           />
-          {task.value}
+          <span
+            className={`${task.completed ? 'text-decoration-line-through' : ''}`}
+          >
+            {task.value}
+          </span>
         </label>
       </div>
 
@@ -72,4 +85,4 @@ const TaskItem: React.FC<Props> = ({ task }) => {
   )
 }
 
-export default TaskItem
+export default memo(TaskItem)

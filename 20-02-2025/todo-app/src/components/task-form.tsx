@@ -1,23 +1,22 @@
-import { memo, useState } from 'react'
-import { useTasks } from '../context/task-context'
+import { memo, useRef } from 'react'
 
-const TaskForm = memo(() => {
-  const { addTask } = useTasks()
-  const [value, setValue] = useState('')
+const TaskForm = ({ addTask }: { addTask: (taskValue: string) => void }) => {
+  const inputRef = useRef<HTMLInputElement | null>(null)
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    addTask(value)
-    setValue('')
+    if (inputRef.current) {
+      addTask(inputRef.current.value)
+      inputRef.current.value = ''
+    }
   }
 
   return (
     <form onSubmit={handleSubmit} className="input-group mb-3">
       <input
+        ref={inputRef}
         type="text"
         className="form-control"
-        value={value}
-        onChange={e => setValue(e.target.value)}
         placeholder="Add task..."
         required
       />
@@ -26,6 +25,6 @@ const TaskForm = memo(() => {
       </button>
     </form>
   )
-})
+}
 
-export default TaskForm
+export default memo(TaskForm)
