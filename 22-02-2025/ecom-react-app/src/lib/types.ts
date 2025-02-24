@@ -1,7 +1,7 @@
 export type User = {
   id: number
   user: string
-  iat: string
+  iat: number
 }
 
 export enum Category {
@@ -21,4 +21,9 @@ export type Product = {
   category: Category
   image: string
   rating: Rating
+}
+
+export type CartItem = {
+  product: Product
+  quantity: number
 }

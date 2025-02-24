@@ -1,10 +1,10 @@
 import { AxiosError } from 'axios'
-import { mutationReducer, MutationState } from './mutationReducer'
-import { useReducer } from 'react'
+import { useState } from 'react'
 
 type MutationFn<TArgs, TData> = (args: TArgs) => Promise<TData>
 
-type MutationResult<TArgs, TData> = MutationState<TData> & {
+type MutationResult<TArgs> = {
+  isLoading: boolean
   mutate: (args: TArgs) => Promise<void>
 }
 
@@ -16,17 +16,14 @@ type MutationOptions<TData> = {
 export const useMutation = <TArgs, TData>(
   mutationFn: MutationFn<TArgs, TData>,
   opts?: MutationOptions<TData>
-): MutationResult<TArgs, TData> => {
-  const [state, dispatch] = useReducer(mutationReducer<TData>, {
-    isLoading: false
-  })
+): MutationResult<TArgs> => {
+  const [loading, setLoading] = useState(false)
 
   const mutate = async (args: TArgs) => {
-    dispatch({ type: 'MUTATION_START' })
+    setLoading(true)
 
     try {
       const data = await mutationFn(args)
-      dispatch({ type: 'MUTATION_SUCCESS', payload: data })
 
       if (opts?.onSuccess) opts.onSuccess(data)
     } catch (err) {
@@ -36,21 +33,19 @@ export const useMutation = <TArgs, TData>(
           : err instanceof Error
             ? err.message
             : 'Something went wrong!'
-      dispatch({
-        type: 'MUTATION_ERROR',
-        payload: errorMsg
-      })
       if (opts?.onError) opts.onError(errorMsg)
+    } finally {
+      setLoading(false)
     }
   }
 
   return {
-    ...state,
+    isLoading: loading,
     mutate
   }
 }
 
-// const { isLoading } = useMutation(login, {
+// const { isLoading, mutate } = useMutation(login, {
 //   onSuccess: (data) => {}
 //   onError: (error) => {}
 // })
@@ -58,3 +53,4 @@ export const useMutation = <TArgs, TData>(
 //   const { data } = await axios.post('/login', loginData)
 //   return data
 // }
+// mutate({ username, password })

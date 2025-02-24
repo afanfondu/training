@@ -1,4 +1,4 @@
-import { useProducts } from '@/contexts/product-context'
+import { useProducts } from '@/contexts/products-context'
 import {
   Select,
   SelectContent,
@@ -10,12 +10,15 @@ import ProductsSkeleton from './products-skeleton'
 import { Category } from '@/lib/types'
 import { useState } from 'react'
 import ProductCard from './product-card'
+import AlertError from '@/components/shared/alert-error'
 
 export default function HomePage() {
-  const { products, isLoading } = useProducts()
+  const { products, isLoading, error } = useProducts()
   const [category, setCategory] = useState<Category | 'all'>('all')
 
   if (isLoading) return <ProductsSkeleton />
+
+  if (error) return <AlertError description={error} />
 
   const filteredProducts = products.filter(product => {
     if (category === 'all') return true

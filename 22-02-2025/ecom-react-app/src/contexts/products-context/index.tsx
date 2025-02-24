@@ -1,15 +1,15 @@
 import { Product } from '@/lib/types'
 import { createContext, useContext, useEffect, useReducer } from 'react'
-import { productReducer, ProductState } from './product-reducer'
+import { productsReducer, ProductsState } from './products-reducer'
 import api from '@/lib/api'
 import { AxiosError } from 'axios'
 
-type ProductContextType = ProductState
+type ProductsContextType = ProductsState
 
-const ProductContext = createContext<ProductContextType | null>(null)
+const ProductContext = createContext<ProductsContextType | null>(null)
 
-export function ProductProivder({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(productReducer, {
+export function ProductsProivder({ children }: { children: React.ReactNode }) {
+  const [state, dispatch] = useReducer(productsReducer, {
     isLoading: true,
     products: []
   })
