@@ -2,9 +2,10 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useCart } from '@/contexts/cart-context'
 import { Separator } from '@radix-ui/react-dropdown-menu'
+import { toast } from 'sonner'
 
 export default function OrderSummary() {
-  const { cartItems } = useCart()
+  const { cartItems, dispatch } = useCart()
   const subtotal = cartItems.reduce(
     (total, item) => total + item.product.price * item.quantity,
     0
@@ -30,7 +31,15 @@ export default function OrderSummary() {
             <span>Total</span>
             <span>${total.toFixed(2)}</span>
           </div>
-          <Button className="w-full">Proceed to Checkout</Button>
+          <Button
+            onClick={() => {
+              dispatch({ type: 'RESET' })
+              toast.success('Order placed successfully')
+            }}
+            className="w-full"
+          >
+            Proceed to Checkout
+          </Button>
         </div>
       </Card>
     </div>

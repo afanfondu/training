@@ -1,10 +1,16 @@
 import { Product } from '@/lib/types'
 import { createContext, useContext, useEffect, useReducer } from 'react'
-import { productsReducer, ProductsState } from './products-reducer'
+import {
+  ProductsAction,
+  productsReducer,
+  ProductsState
+} from './products-reducer'
 import api from '@/lib/api'
 import { AxiosError } from 'axios'
 
-type ProductsContextType = ProductsState
+type ProductsContextType = {
+  dispatch: React.ActionDispatch<[action: ProductsAction]>
+} & ProductsState
 
 const ProductContext = createContext<ProductsContextType | null>(null)
 
@@ -33,7 +39,9 @@ export function ProductsProivder({ children }: { children: React.ReactNode }) {
     })()
   }, [])
 
-  return <ProductContext value={state}>{children}</ProductContext>
+  return (
+    <ProductContext value={{ ...state, dispatch }}>{children}</ProductContext>
+  )
 }
 
 export function useProducts() {

@@ -9,6 +9,7 @@ export type CartAction =
       type: 'UPDATE_QUANTITY'
       payload: { productId: number; updatedQuantity: number }
     }
+  | { type: 'RESET' }
 
 export const cartReducer = (
   state: CartState,
@@ -25,5 +26,7 @@ export const cartReducer = (
           ? { ...item, quantity: action.payload.updatedQuantity }
           : item
       )
+    case 'RESET':
+      return []
   }
 }

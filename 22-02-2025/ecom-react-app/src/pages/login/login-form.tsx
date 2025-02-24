@@ -59,6 +59,7 @@ export function LoginForm() {
         <CardDescription>
           Use one of the username from this{' '}
           <Link
+            target="_blank"
             to="https://fakestoreapi.com/users"
             className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
           >

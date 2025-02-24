@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import ThemeToggle from '@/components/shared/theme-toggle'
 import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet'
-import { Link, Outlet } from 'react-router'
+import { Link, NavLink, Outlet } from 'react-router'
 import { MenuIcon } from 'lucide-react'
 import { useAuth } from '@/contexts/auth-context'
 
@@ -11,29 +11,31 @@ export default function Component() {
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-white dark:border-gray-800 dark:bg-gray-950">
         <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
-          <Link to="/" className="flex items-center gap-2">
+          <NavLink to="/" className="flex items-center gap-2">
             <h3 className="text-xl font-bold">E.</h3>
-          </Link>
+          </NavLink>
 
           <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-            <Link
+            <NavLink
               to="/"
               className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
             >
               Home
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/cart"
               className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
             >
               Cart
-            </Link>
-            <Link
-              to="/admin"
-              className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-            >
-              Admin
-            </Link>
+            </NavLink>
+            {state.user && state.user.user === 'donero' && (
+              <NavLink
+                to="/admin"
+                className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+              >
+                Admin
+              </NavLink>
+            )}
           </nav>
 
           <div className="flex items-center gap-4">
@@ -61,24 +63,24 @@ export default function Component() {
               </SheetTrigger>
               <SheetContent side="left" className="md:hidden">
                 <div className="grid gap-4 p-4">
-                  <Link
+                  <NavLink
                     to="/"
                     className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                   >
                     Home
-                  </Link>
-                  <Link
+                  </NavLink>
+                  <NavLink
                     to="/cart"
                     className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                   >
                     Cart
-                  </Link>
-                  <Link
+                  </NavLink>
+                  <NavLink
                     to="/admin"
                     className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                   >
                     Admin
-                  </Link>
+                  </NavLink>
                 </div>
               </SheetContent>
             </Sheet>
