@@ -1,21 +1,19 @@
 import { TableRow, TableCell } from '@/components/ui/table'
-import { useMutation } from '@/hooks/useMutation'
 import { Product } from '@/lib/types'
 import { Trash2 } from 'lucide-react'
 import { deleteProduct } from './actions'
 import { LoadingButton } from '@/components/shared/loading-button'
-import { useProducts } from '@/contexts/products-context'
 import { toast } from 'sonner'
+import { useMutation } from '@tanstack/react-query'
 
 export default function ProductsTableRow({ product }: { product: Product }) {
-  const { dispatch } = useProducts()
-  const { mutate, isLoading } = useMutation<string, Product>(deleteProduct, {
+  const { mutate, isPending } = useMutation({
+    mutationFn: deleteProduct,
     onSuccess: () => {
-      dispatch({ type: 'DELETE_PRODUCT', payload: { productId: product.id } })
       toast.success('Product deleted successfully')
     },
     onError: error => {
-      toast.error(error)
+      toast.error(error.message)
     }
   })
 
@@ -25,7 +23,7 @@ export default function ProductsTableRow({ product }: { product: Product }) {
     )
     if (!deleteConfirm) return
 
-    await mutate(product.id.toString())
+    mutate(product.id.toString())
   }
 
   return (
@@ -44,7 +42,7 @@ export default function ProductsTableRow({ product }: { product: Product }) {
         <LoadingButton
           onClick={deleteHandler}
           variant={'destructive'}
-          isLoading={isLoading}
+          isLoading={isPending}
         >
           <Trash2 className="h-4 w-4" />
         </LoadingButton>

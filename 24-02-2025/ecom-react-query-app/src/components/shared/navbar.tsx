@@ -3,18 +3,16 @@ import ThemeToggle from '@/components/shared/theme-toggle'
 import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet'
 import { Link, NavLink, Outlet } from 'react-router'
 import { MenuIcon } from 'lucide-react'
-import { useAuth } from '@/contexts/auth-context'
+import { useAuth } from '@/context/auth-context'
 
 export default function Component() {
-  const { state, dispatch } = useAuth()
+  const { setAuth, auth } = useAuth()
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-white dark:border-gray-800 dark:bg-gray-950">
         <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
           <NavLink to="/" className="flex items-center gap-2">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-              E.
-            </h3>
+            <h3 className="text-xl font-bold">E.</h3>
           </NavLink>
 
           <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
@@ -30,7 +28,7 @@ export default function Component() {
             >
               Cart
             </NavLink>
-            {state.user && state.user.user === 'donero' && (
+            {auth.user && auth.user.user === 'donero' && (
               <NavLink
                 to="/admin"
                 className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
@@ -39,13 +37,14 @@ export default function Component() {
               </NavLink>
             )}
           </nav>
+
           <div className="flex items-center gap-4">
             <ThemeToggle />
 
-            {state.user ? (
+            {auth.user ? (
               <>
-                <p>{state.user.user}</p>
-                <Button onClick={() => dispatch({ type: 'REMOVE_AUTH' })}>
+                <p>{auth.user.user}</p>
+                <Button onClick={() => setAuth({ token: null, user: null })}>
                   Logout
                 </Button>
               </>

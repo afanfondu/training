@@ -16,12 +16,10 @@ import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { ProductAddForm, productAddFormSchema } from './schema'
-import { useMutation } from '@/hooks/useMutation'
-import { Product } from '@/lib/types'
 import { addProduct } from './actions'
 import { LoadingButton } from '@/components/shared/loading-button'
 import { toast } from 'sonner'
-import { useProducts } from '@/contexts/products-context'
+import { useMutation } from '@tanstack/react-query'
 
 export function AddProductDialog({
   open,
@@ -33,24 +31,22 @@ export function AddProductDialog({
   const form = useForm<ProductAddForm>({
     resolver: zodResolver(productAddFormSchema)
   })
-  const { dispatch } = useProducts()
-  const { isLoading, mutate } = useMutation<ProductAddForm, Product>(
-    addProduct,
-    {
-      onSuccess: data => {
-        dispatch({ type: 'ADD_PRODUCT', payload: data })
-
-        form.reset()
-        onOpenChange(false)
-      },
-      onError: error => {
-        toast.error(error)
-      }
+  const { isPending, mutate } = useMutation({
+    mutationFn: addProduct,
+    onSuccess: data => {
+      toast.success(
+        'Product added successfully\n' + JSON.stringify(data, null, 2)
+      )
+      form.reset()
+      onOpenChange(false)
+    },
+    onError: error => {
+      toast.error(error.message)
     }
-  )
+  })
 
   async function onSubmit(values: ProductAddForm) {
-    await mutate(values)
+    mutate(values)
   }
 
   return (
@@ -132,7 +128,7 @@ export function AddProductDialog({
             <LoadingButton
               type="submit"
               className="w-full"
-              isLoading={isLoading}
+              isLoading={isPending}
             >
               Submit
             </LoadingButton>
