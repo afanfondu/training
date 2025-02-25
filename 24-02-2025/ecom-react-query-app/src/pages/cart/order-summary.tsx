@@ -1,10 +1,12 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { useAuth } from '@/context/auth-context'
 import { useCart } from '@/context/cart-context'
 import { Separator } from '@radix-ui/react-dropdown-menu'
 import { toast } from 'sonner'
 
 export default function OrderSummary() {
+  const { auth } = useAuth()
   const { cartItems, dispatch } = useCart()
   const subtotal = cartItems.reduce(
     (total, item) => total + item.product.price * item.quantity,
@@ -33,12 +35,14 @@ export default function OrderSummary() {
           </div>
           <Button
             onClick={() => {
+              if (!auth.user) return toast.error('Please login to place order')
+
               dispatch({ type: 'RESET' })
               toast.success('Order placed successfully')
             }}
             className="w-full"
           >
-            Proceed to Checkout
+            Place Order
           </Button>
         </div>
       </Card>

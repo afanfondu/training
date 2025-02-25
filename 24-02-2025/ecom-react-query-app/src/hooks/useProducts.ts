@@ -7,10 +7,11 @@ const fetchProducts = async () => {
   return data
 }
 
-const useProducts = () =>
+const useProducts = (enabled = true) =>
   useQuery<Product[]>({
     queryKey: ['products'],
-    queryFn: fetchProducts
+    queryFn: fetchProducts,
+    enabled
   })
 
 export default useProducts

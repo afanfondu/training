@@ -55,7 +55,7 @@ export function LoginForm() {
       <CardHeader>
         <CardTitle className="text-2xl">Login</CardTitle>
         <CardDescription>
-          Use one of the username from this{' '}
+          Use one of the username and password from this{' '}
           <Link
             target="_blank"
             to="https://fakestoreapi.com/users"

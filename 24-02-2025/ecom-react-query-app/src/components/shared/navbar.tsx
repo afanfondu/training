@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button'
 import ThemeToggle from '@/components/shared/theme-toggle'
 import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet'
-import { Link, NavLink, Outlet } from 'react-router'
+import { Link, NavLink, NavLinkProps, Outlet } from 'react-router'
 import { MenuIcon } from 'lucide-react'
 import { useAuth } from '@/context/auth-context'
+import { cn } from '@/lib/utils'
 
 export default function Component() {
   const { setAuth, auth } = useAuth()
@@ -11,30 +12,15 @@ export default function Component() {
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-white dark:border-gray-800 dark:bg-gray-950">
         <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
-          <NavLink to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <h3 className="text-xl font-bold">E.</h3>
-          </NavLink>
+          </Link>
 
           <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-            <NavLink
-              to="/"
-              className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-            >
-              Home
-            </NavLink>
-            <NavLink
-              to="/cart"
-              className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-            >
-              Cart
-            </NavLink>
+            <ActiveLink to="/">Home</ActiveLink>
+            <ActiveLink to="/cart">Cart</ActiveLink>
             {auth.user && auth.user.user === 'donero' && (
-              <NavLink
-                to="/admin"
-                className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-              >
-                Admin
-              </NavLink>
+              <ActiveLink to="/admin">Admin</ActiveLink>
             )}
           </nav>
 
@@ -63,24 +49,9 @@ export default function Component() {
               </SheetTrigger>
               <SheetContent side="left" className="md:hidden">
                 <div className="grid gap-4 p-4">
-                  <NavLink
-                    to="/"
-                    className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                  >
-                    Home
-                  </NavLink>
-                  <NavLink
-                    to="/cart"
-                    className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                  >
-                    Cart
-                  </NavLink>
-                  <NavLink
-                    to="/admin"
-                    className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                  >
-                    Admin
-                  </NavLink>
+                  <ActiveLink to="/">Home</ActiveLink>
+                  <ActiveLink to="/cart">Cart</ActiveLink>
+                  <ActiveLink to="/admin">Admin</ActiveLink>
                 </div>
               </SheetContent>
             </Sheet>
@@ -92,5 +63,31 @@ export default function Component() {
         <Outlet />
       </main>
     </>
+  )
+}
+
+export function ActiveLink({
+  children,
+  className,
+  ...props
+}: {
+  children: React.ReactNode
+  className?: string
+} & NavLinkProps) {
+  return (
+    <NavLink
+      {...props}
+      className={({ isActive }) =>
+        cn(
+          'transition-colors',
+          isActive
+            ? 'text-primary font-medium'
+            : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50',
+          className
+        )
+      }
+    >
+      {children}
+    </NavLink>
   )
 }

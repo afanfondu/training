@@ -7,19 +7,19 @@ import HomePage from './pages/home'
 import CartPage from './pages/cart'
 import AdminPage from './pages/admin'
 import ProductDetailsPage from './pages/product-details'
-import CategoryProducts from './pages/category-products'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navbar />}>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" index element={<HomePage />} />
           <Route path="/product/:productId" element={<ProductDetailsPage />} />
-          <Route path="/category/:category" element={<CategoryProducts />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/login" element={<LoginPage />} />
+
+          <Route path="*" element={<h1>404 Not Found</h1>} />
         </Route>
       </Routes>
     </BrowserRouter>
