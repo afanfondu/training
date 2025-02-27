@@ -6,7 +6,7 @@ import { LoadingButton } from '@/components/shared/loading-button'
 import { toast } from 'sonner'
 import { useMutation } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
-import { ProductProp } from './add-product-dialog'
+import { ProductProp } from './product-dialog'
 
 export default function ProductsTableRow({
   setIsDialogOpen,

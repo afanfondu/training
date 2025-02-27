@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { ProductsTable } from './products-table'
-import { AddProductDialog, ProductProp } from './add-product-dialog'
+import ProductDialog, { ProductProp } from './product-dialog'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/context/auth-context'
 import { useNavigate } from 'react-router'
@@ -41,7 +41,7 @@ export default function AdminPage() {
         setIsDialogOpen={setIsDialogOpen}
         setSelectedProduct={setSelectedProduct}
       />
-      <AddProductDialog
+      <ProductDialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         selectedProduct={selectedProduct}

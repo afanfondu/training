@@ -1,6 +1,12 @@
 import { Button } from '@/components/ui/button'
 import ThemeToggle from '@/components/shared/theme-toggle'
-import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet'
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetDescription,
+  SheetTitle
+} from '@/components/ui/sheet'
 import { Link, NavLink, NavLinkProps, Outlet } from 'react-router'
 import { ChevronDown, MenuIcon } from 'lucide-react'
 import { useAuth } from '@/context/auth-context'
@@ -80,6 +86,8 @@ export default function Component() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="md:hidden">
+                <SheetTitle></SheetTitle>
+                <SheetDescription></SheetDescription>
                 <div className="flex flex-col gap-4 p-4">
                   <ActiveLink to="/">Home</ActiveLink>
                   <ActiveLink to="/cart">Cart</ActiveLink>

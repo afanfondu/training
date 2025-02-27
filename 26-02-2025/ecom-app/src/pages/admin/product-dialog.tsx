@@ -1,6 +1,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
@@ -31,7 +32,7 @@ export type ProductProp = {
   image: string
 }
 
-export function AddProductDialog({
+export default function ProductDialog({
   selectedProduct,
   open,
   onOpenChange
@@ -86,9 +87,12 @@ export function AddProductDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent aria-describedby="Form to add or edit products">
         <DialogHeader>
-          <DialogTitle>Add New Product</DialogTitle>
+          <DialogTitle>
+            {selectedProduct.title ? 'Edit Product' : 'Add New Product'}
+          </DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

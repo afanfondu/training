@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/table'
 import ProductsTableRow from './products-table-row'
 import useProducts from '@/hooks/useProducts'
-import { ProductProp } from './add-product-dialog'
+import { ProductProp } from './product-dialog'
 
 export function ProductsTable({
   setIsDialogOpen,
