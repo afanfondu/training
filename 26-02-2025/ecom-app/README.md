@@ -1,5 +1,5 @@
 # Ecom App
 ## Demo
 
-https://github.com/user-attachments/assets/ed201ce2-2419-4585-8a38-10d60b3bd523
+https://github.com/user-attachments/assets/41377062-1e03-4cca-9faf-81bbd7f9ab83
 
